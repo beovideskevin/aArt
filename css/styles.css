@@ -1,0 +1,85 @@
+@font-face {
+  font-family: aAFont;
+  src: url(../fonts/SpaceMono-Regular.ttf);
+}
+
+/* colours */
+:root {
+  --primary: #ffe9d2;
+  --title: #ff8816;
+}
+
+/* fix the logo */
+.brand-logo {
+  font-family: aAFont;
+  text-transform: none;
+}
+
+/* layout styles */
+nav,
+footer {
+  background: var(--primary);
+  border-bottom: 10px solid var(--primary);
+}
+
+nav a,
+footer a {
+  text-transform: uppercase;
+  color: var(--title);
+}
+
+nav a span,
+footer a span {
+  font-weight: bold;
+}
+
+nav .sidenav-trigger {
+  margin: 0;
+}
+
+footer {
+  padding: 20px;
+}
+
+footer a {
+  text-decoration: underline;
+  float: right;
+}
+
+@media(max-width: 360px){
+  footer{
+    text-align: center;
+  }
+
+  footer a{
+    float: none;
+  }
+}
+
+/* form-styles */
+input {
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+.side-form button {
+  background: var(--title);
+  box-shadow: 1px 1px 3px rgba(90, 90, 90, 0.2);
+}
+
+form .input-field {
+  margin: 30px 15px 0px 0px;
+}
+
+/* Field to get the photo */
+#cameraFileInput {
+  display: none;
+}
+
+#atTheBottom {
+  margin-bottom: 30px;
+}
+
+#qrcode {
+  display: none;
+}
