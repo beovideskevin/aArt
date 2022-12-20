@@ -4,13 +4,6 @@
 const canvas = document.getElementById("mainCanvas"); // This is the canvas
 const context = canvas.getContext("2d"); // Get the context
 const qrDiv = document.getElementById('qrcode'); // This is where the QR image is
-const qrcode = new QRCode('qrcode', {
-  text: "/",
-  // width: 512,
-	// height: 512,
-  // colorDark : "#4d463e",
-  // colorLight : "#ffe9d2"
-}); // Init the QR object
 const letterOrder = " .`-_':,;^=+/\"|(\\<>)iv%xclrs{*}I?!][1taeo7zjLunT#JCwfy325Fp6mqSghVd4EgXPGZbYkOA&8U$@KHDBWNMR0Q";
 var letters; // The letters organized 
 var letterMatrix; // The matrix with the letters
@@ -152,49 +145,49 @@ function assignConfig(revert) {
 /**
  * Process the image, this is the algorithm to make the ascii art
  */
-function processImage(img) {
+ function processImage() {
   // Calculate the image and the result size  
   let resizedWidth, resizedHeight, resultWidth, resultHeight;
-  if (img.width >= img.height) {
+  if (srcImg.width >= srcImg.height) {
     resizedWidth = config.chars;
-    resizedHeight =  Math.floor(resizedWidth * img.height / img.width);
+    resizedHeight =  Math.floor(resizedWidth * srcImg.height / srcImg.width);
 
     // The final result size
-    if (!config.printSize && img.width / img.height >= 1.7 && img.width / img.height <= 1.8) {
+    if (!config.printSize && srcImg.width / srcImg.height >= 1.7 && srcImg.width / srcImg.height <= 1.8) {
       resultHeight = 1080;
       resultWidth = 1920;
     }
     else {
       resultHeight = config.printSize? 4320 : 1080;
-      resultWidth =  Math.floor(resultHeight * img.width / img.height);
+      resultWidth =  Math.floor(resultHeight * srcImg.width / srcImg.height);
     }
   }
   else {
     resizedHeight = config.chars;
-    resizedWidth =  Math.floor(resizedHeight * img.width / img.height);
+    resizedWidth =  Math.floor(resizedHeight * srcImg.width / srcImg.height);
 
     // The final result size
-    if (!config.printSize && img.height / img.width >= 1.7 && img.height / img.width <= 1.8) {
+    if (!config.printSize && srcImg.height / srcImg.width >= 1.7 && srcImg.height / srcImg.width <= 1.8) {
       resultWidth = 1080;
       resultHeight = 1920;
     }
     else {
       resultWidth = config.printSize? 4320 : 1080;
-      resultHeight =  Math.floor(resultWidth * img.height / img.width);
+      resultHeight =  Math.floor(resultWidth * srcImg.height / srcImg.width);
     }
   }
 
   // Resize the image
-  let resizedImg = new OffscreenCanvas(resizedWidth, resizedHeight),
+  let resizedImg = new OffscreenCanvas(resizedWidth, resizedHeight),  
       resizedCtx = resizedImg.getContext('2d');
-  resizedCtx.drawImage(img, 0, 0, resizedWidth, resizedHeight);
+  resizedCtx.drawImage(srcImg, 0, 0, resizedWidth, resizedHeight);
   
   // Get the pixels from the resized image
   let imgData = resizedCtx.getImageData(0, 0, resizedWidth, resizedHeight),
       pixels = imgData.data;
           
   // Set the proportion of the lights
-  let lights = mapNumber(config.lights, 1, 10, 1, 2);
+  let lights = mapNumber(config.lights, 1, 5, 1, 2);
 
   // Loop over each pixel and set up the color, font and letter arrays
   letterMatrix = new Array(resizedWidth * resizedHeight);
@@ -272,6 +265,12 @@ function processImage(img) {
     resultCtx.fillStyle = "white";
     resultCtx.fillRect(0, 0, resultCanvas.width, resultCanvas.height);
   }
+  
+  // if (config.arLayer) {
+  //   resultCtx.fillStyle = "black";
+  //   resultCtx.fillRect(0, 0, resultCanvas.width, resultCanvas.height);
+  // }
+  
   let fSize = 1 + (config.font / 10);
   resultCtx.save();
   resultCtx.scale((resultCanvas.width / resizedWidth) * fSize,
@@ -297,7 +296,7 @@ function processImage(img) {
   if (config.mixOriginal) {
     let mixCanvas = new OffscreenCanvas(resultWidth, resultHeight),
         mixCtx = mixCanvas.getContext('2d');
-    mixCtx.drawImage(img, 0, 0, resultWidth, resultHeight);
+    mixCtx.drawImage(srcImg, 0, 0, resultWidth, resultHeight);
     mixCtx.drawImage(resultCanvas, 0, 0, resultWidth, resultHeight);
     resultCanvas = document.createElement('canvas'); 
     resultCanvas.width = resultWidth;
@@ -532,7 +531,8 @@ document.querySelectorAll(".submitForm").forEach(element => {
     }
 
     // Process the image
-    processImage(srcImg);
+    // M.toast({html: 'Processing image, please wait...'});
+    processImage();
   });
 });
 
@@ -587,10 +587,12 @@ document.getElementById("saveImage").addEventListener("click", function (evt) {
 
   let filename = createFilename();
   if (config.arLayer) {
+    let orientation = resultCanvas.width >= resultCanvas.height ? "landscape" : "portrait";   
     let imageUrl = resultCanvas.toDataURL();
     let imageData = new FormData();
     imageData.append('file', imageUrl);
-    let urlRequest = 'https://ar.eldiletante.com/upload?key=f95db1a57cf1e55f7b5ad11fb19c373b38e0c44a&filename=' + filename + ".png&marker=" + prefix;
+    let urlRequest = "https://ar.eldiletante.com/upload?key=f95db1a57cf1e55f7b5ad11fb19c373b38e0c44a&filename=" + filename + ".png&marker=" + 
+                     prefix + "&orientation=" + orientation + "&action=image&width=" + resultCanvas.width + "&height=" + resultCanvas.height;
     xhr = new XMLHttpRequest();
     xhr.open('POST', urlRequest, false);
     xhr.onload = function () {
@@ -606,13 +608,18 @@ document.getElementById("saveImage").addEventListener("click", function (evt) {
     };
     xhr.send(imageData);
 
-    // Create the QR
-    qrcode.clear(); // clear the code.
-    qrcode.makeCode("https://ar.eldiletante.com/show?id=" + res.id); // make another code.   
-
+    // Creating the QR code
+    const qrcode = new QRCode('qrcode', { 
+      text: "https://ar.eldiletante.com/show?id=" + res.id,
+      width: 256,
+      height: 256,
+      // colorDark : "#4d463e",
+      // colorLight : "#ffe9d2"
+    }); // Init the QR object
+    
     // Download it
     this.setAttribute('download', prefix + '.png');
-    this.href = qrDiv.querySelector('img').src;
+    this.href = qrDiv.querySelector('canvas').toDataURL().replace("image/png", "image/octet-stream");
   }
   else {
     this.setAttribute('download', filename + '.jpg');
