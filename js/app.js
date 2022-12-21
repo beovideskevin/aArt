@@ -669,3 +669,4 @@ document.getElementById("shareImage").addEventListener("click", function (evt) {
     }
   }, 'image/jpeg', 1.0);
 });
+
