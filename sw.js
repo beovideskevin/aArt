@@ -1,4 +1,4 @@
-const cacheName = 'site-static-v100';
+const cacheName = 'site-static-v105';
 const assets = [
   '/',
   'manifest.json',
