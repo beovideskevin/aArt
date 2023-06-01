@@ -6,12 +6,12 @@
 - [ ] the new format image/jpeg when saving is not compatible with SMS
 - [ ] no se comparte el texto en el messager ni en facebook ni en IG
 
-# TODO
+## TODO
 
 - [ ] que suba la imagen como esta, sin volverla ha hacer
 - [ ] que cree el QR y este sea el que se descargue
 
-# NOTE
+## NOTE
 
 In case you want to use the google font:
 
