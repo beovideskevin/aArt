@@ -1,4 +1,4 @@
-const cacheName = 'site-static-v105';
+const cacheName = 'site-static-v113';
 const assets = [
   '/',
   'manifest.json',
@@ -16,10 +16,10 @@ const assets = [
   '/js/app.js',
   '/js/materialize.min.js',
   '/css/styles.css',
+  '/css/material-icons.css',
   '/css/materialize.min.css',
   '/fonts/SpaceMono-Regular.ttf',
-  'https://fonts.googleapis.com/icon?family=Material+Icons',
-  'https://fonts.gstatic.com/s/materialicons/v47/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
+  '/fonts/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
 ];
 
 // install event

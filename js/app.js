@@ -132,7 +132,7 @@ function assignConfig(revert) {
       inferior: parseInt(form.inferior.value, 10),
       superior: parseInt(form.superior.value, 10),
       gray: parseInt(form.gray.value, 10),
-      text: form.text.value.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s/g, '').toLowerCase(),
+      text: form.text.value.replace(/[@\.,#!¿¡\$%\^&;:\{\}=\+\-_`~\(\)/\\\?\*\|"<>\[\]]/g, "").replace(/\s+/g, '').toLowerCase(),
       blackWhite: form.blackWhite.checked,
       invertMap: form.invertMap.checked,
       invertGray: form.invertGray.checked,
@@ -162,7 +162,7 @@ function processImage() {
       resultWidth = 1920;
     }
     else {
-      resultHeight = config.printSize ? 4320 : 1080;
+      resultHeight = config.printSize ? 4320 : 1080; // 7680*4320 is 8K
       resultWidth = Math.floor(resultHeight * srcImg.width / srcImg.height);
     }
   }
@@ -176,7 +176,7 @@ function processImage() {
       resultHeight = 1920;
     }
     else {
-      resultWidth = config.printSize ? 4320 : 1080;
+      resultWidth = config.printSize ? 4320 : 1080; // 7680*4320 is 8K
       resultHeight = Math.floor(resultWidth * srcImg.height / srcImg.width);
     }
   }
@@ -591,39 +591,8 @@ document.getElementById("saveImage").addEventListener("click", async function (e
 
   let filename = createFilename();
   if (config.arLayer) {
-    let res;
-    let orientation = resultCanvas.width >= resultCanvas.height ? "landscape" : "portrait";
-    let imageUrl = resultCanvas.toDataURL();
-    let imageData = new FormData();
-    imageData.append('file', imageUrl);
-    let urlRequest = "https://ar.eldiletante.com/upload?key=f95db1a57cf1e55f7b5ad11fb19c373b38e0c44a&filename=" + filename + ".png&marker=" +
-      prefix + "&orientation=" + orientation + "&action=image&width=" + resultCanvas.width + "&height=" + resultCanvas.height;
-    xhr = new XMLHttpRequest();
-    xhr.open('POST', urlRequest, false);
-    xhr.onload = function () {
-      if (this.status == 200) {
-        res = JSON.parse(this.responseText);
-      }
-    };
-    await xhr.send(imageData);
-
-    if (res == undefined || !res.id || res.id == 0) {
-      M.toast({ html: 'Error! The file was not uploaded.' });
-    }
-    else {
-      // Creating the QR code
-      const qrcode = new QRCode('qrcode', {
-        text: "https://ar.eldiletante.com/show?id=" + res.id,
-        width: 256,
-        height: 256,
-        // colorDark : "#4d463e",
-        // colorLight : "#ffe9d2"
-      }); // Init the QR object
-
-      // Download it
-      this.href = qrDiv.querySelector('canvas').toDataURL().replace("image/png", "image/octet-stream");
-      this.setAttribute('download', prefix + '.png');
-    }
+    this.setAttribute('download', filename + '.png');
+    this.href = resultCanvas.toDataURL().replace("image/png", "image/octet-stream");   
   }
   else {
     this.setAttribute('download', filename + '.jpg');
