@@ -1,6 +1,6 @@
 # aArt
 
-This is a JS app for creating ASCII art artworks.
+This is a JS app for creating ASCII art artworks. The works I created with it are in the gallery [eldiletante.com](https://www.eldiletante.com)
 
 # BUGS
 
