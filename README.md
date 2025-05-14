@@ -2,7 +2,7 @@
 
 I created this PWA to generate ASCII art artworks. I built it using only vanilla JS and added a worker for cache so the application works offline too.
 
-The images I created with it are in the gallery [eldiletante.com](https://www.eldiletante.com)
+The images I created are in the gallery [eldiletante.com](https://www.eldiletante.com)
 
 # BUGS
 
