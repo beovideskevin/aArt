@@ -1,6 +1,8 @@
 # aArt
 
-This is a JS app for creating ASCII art artworks: [aArt](https://aart.eldiletante.com/). The images I created with it are in the gallery [eldiletante.com](https://www.eldiletante.com)
+I created this PWA to generate ASCII art artworks. I built it using only vanilla JS and added a worker for cache so the application works offline too.
+
+The images I created with it are in the gallery [eldiletante.com](https://www.eldiletante.com)
 
 # BUGS
 
